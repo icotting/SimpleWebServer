@@ -3,26 +3,26 @@
 Simple Server is a very basic HTTP server that supports a tiny sub-set of the HTTP specification in order for students to gain a better understanding of how the web works. Simple Server supports the following basic features: 
 
 1. Accepts HTTP GET requests
-.. allows user definition of the server web root
-..* allows user definition of the port number
-..* [ASSIGNMENT REQUIREMENT]: allows user definition of the default document
-..* [ASSIGNMENT REQUIREMENT]: supports sub-directory sites
+	+ allows user definition of the server web root
+	+ allows user definition of the port number
+	+ [ASSIGNMENT REQUIREMENT]: allows user definition of the default document
+	+ [ASSIGNMENT REQUIREMENT]: supports sub-directory sites
 
 2. Can handle response types for:
-..* HTTP OK
-..* HTTP NOT FOUND
-..* HTTP METHOD NOT ALLOWED
-..* HTTP INTERNAL SERVER ERROR
+	+ HTTP OK
+	+ HTTP NOT FOUND
+	+ HTTP METHOD NOT ALLOWED
+	+ HTTP INTERNAL SERVER ERROR
 
 3. Accepts GET request parameters
 
 4. Serves basic static mime-types:
-..* various images (image/*) jpg, jpeg, png, gif, bmp, tiff
-..* html (text/html) htm html
-..* all other files will be served as application/octet-stream 
+	+ various images (image/*) jpg, jpeg, png, gif, bmp, tiff
+	+ html (text/html) htm html
+	+ all other files will be served as application/octet-stream 
 
 5. Support for dynamic web pages from basic C# scripts or web templates
-..* the server will notify the user of compilation and runtime errors for processing scripts and templates in the response body of an HTTP Internal Server Error response
+	+ the server will notify the user of compilation and runtime errors for processing scripts and templates in the response body of an HTTP Internal Server Error response
 
 ### CScripts
 So called CScripts will be processed to generate HTML content for a response. The following is a simple example of a CScript:
