@@ -13,7 +13,7 @@ namespace WebServer
     enum ResponseType
     {
         NOT_FOUND,
-        BAD_REQUEST,
+        NOT_ALLOWED,
         OK,
         ERROR
     }
@@ -115,11 +115,11 @@ namespace WebServer
                 Console.WriteLine(header);
 
                 /* check to see if the request is a GET request and return an
-                 * HTTP 405 (bad request) if it is not as our simple web server
+                 * HTTP 405 (not allowed) if it is not as our simple web server
                  * will only support GET requests */
                 if (header.Substring(0, 3) != "GET")
                 {
-                    _SendResponse(socket, new byte[0], null, ResponseType.BAD_REQUEST);
+                    _SendResponse(socket, new byte[0], null, ResponseType.NOT_ALLOWED);
                 }
 
                 /* pull out the path being requested by looking between the GET and HTTP
@@ -245,8 +245,8 @@ namespace WebServer
             /* convert the type into the appropriate response header value */
             switch (type)
             {
-                case ResponseType.BAD_REQUEST:
-                    response.Append("HTTP/1.1 405 Bad Request\r\n");
+                case ResponseType.NOT_ALLOWED:
+                    response.Append("HTTP/1.1 405 Method Not Allowed\r\n");
                     break;
                 case ResponseType.ERROR:
                     response.Append("HTTP/1.1 500 Error\r\n");
