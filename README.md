@@ -3,7 +3,7 @@
 Simple Server is a very basic HTTP server that supports a tiny sub-set of the HTTP specification in order for students to gain a better understanding of how the web works. Simple Server supports the following basic features: 
 
 1. Accepts HTTP GET requests
-- allows user definition of the server web root
+.. allows user definition of the server web root
 ..* allows user definition of the port number
 ..* [ASSIGNMENT REQUIREMENT]: allows user definition of the default document
 ..* [ASSIGNMENT REQUIREMENT]: supports sub-directory sites
