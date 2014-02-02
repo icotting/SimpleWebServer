@@ -29,6 +29,7 @@ namespace WebServer
     class WebServer
     {
         private readonly string _webRoot;
+        private readonly string _defaultDoc;
         private IScriptProcessor _scriptProcessor;
 
         static void Main(string[] args)
@@ -44,11 +45,14 @@ namespace WebServer
             /* if the user does not provide a web root, default to /wwwroot */
             string webRoot = args.Count() > 1 ? args[1] : @"C:\wwwroot";
 
+            /* if the user does not provide a default document, use index.html */
+            string defaultDoc = args.Count() > 2 ? args[2] : "index.html";
+
             /* create an instance of the web server and start listening for requests */
-            new WebServer(port, webRoot);
+            new WebServer(port, webRoot, defaultDoc);
         }
 
-        public WebServer(int port, string root)
+        public WebServer(int port, string root, string defaultDoc)
         {
             /* this script processor instance will be used to process files of type 
              * csscript */
@@ -60,6 +64,8 @@ namespace WebServer
             /* set the root for the server */
             _webRoot = root;
 
+            /* set the default doc for the server */
+            _defaultDoc = defaultDoc;
 
             /* create a TcpListener to listen for netweork requests on the provided
              * port number at the lookedup host address and start listening */
@@ -129,50 +135,43 @@ namespace WebServer
                  */
                 string resource = header.Substring(4, header.IndexOf("HTTP") - 4).Trim();
 
-                /* If the root is being requested, send back a default web page stating
-                 * that this server doesn't support default documents or directory
-                 * listing. 
-                 * 
-                 * TODO: change this to support a default document (i.e. index.html) as
-                 * specified by the user. Such a default document should be able to 
-                 * reside at any level of the directory structure under web root. If
-                 * a default document doesn't exist, an HTTP Not Found response should
-                 * be returned
+                /* If a directory is being requested, check to see if the default file exists.
+                 * Otherwise, return a 404 as expected.
                  */
-                if (resource.Equals("/"))
+
+                string directoryPath = string.Format("{0}{1}", _webRoot, resource);
+                if (Directory.Exists(directoryPath))
                 {
-                    string html = "<html><body><h1>Server Server v. 1.0</h1><p>Default pages aren't support, request a specific resources</p></body></html>";
-                    _SendResponse(socket, Encoding.UTF8.GetBytes(html), "text/html; charset=utf8", ResponseType.OK);
+                    resource = string.Format("{0}\\{1}", resource, _defaultDoc);
+                }
+
+                /* if an actual resource was requested, append the webroot to it to transform 
+                    * the path to a system local path and parse the full path to separate the path
+                    * from the request variables */
+                resource = string.Format("{0}{1}", _webRoot, resource.Replace("/", @"\"));
+                string[] parts = resource.Split('?');
+                resource = parts[0]; // the resource is the first half of the path
+
+                /* the request variables are the second part of the path and these are loaded
+                    * into an IDictionary instance to be used later */
+                Dictionary<string, string> requestParameters = parts.Count() > 1 ? parts[1].Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(part => part.Split('='))
+                        .ToDictionary(split => split[0], split => split[1]) : new Dictionary<string, string>();
+
+                /* if the path is to a file that exists under the webroot directory, 
+                    * create an HTTP response with that file in the response body */
+                if (File.Exists(resource))
+                {
+                    _ProcessBody(socket, resource, requestParameters);
                 }
                 else
                 {
-                    /* if an actual resource was requested, append the webroot to it to transform 
-                     * the path to a system local path and parse the full path to separate the path
-                     * from the request variables */
-                    resource = string.Format("{0}{1}", _webRoot, resource.Replace("/", @"\"));
-                    string[] parts = resource.Split('?');
-                    resource = parts[0]; // the resource is the first half of the path
-
-                    /* the request variables are the second part of the path and these are loaded
-                     * into an IDictionary instance to be used later */
-                    Dictionary<string, string> requestParameters = parts.Count() > 1 ? parts[1].Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(part => part.Split('='))
-                         .ToDictionary(split => split[0], split => split[1]) : new Dictionary<string, string>();
-
-                    /* if the path is to a file that exists under the webroot directory, 
-                     * create an HTTP response with that file in the response body */
-                    if (File.Exists(resource))
-                    {
-                        _ProcessBody(socket, resource, requestParameters);
-                    }
-                    else
-                    {
-                        /* otherwise generate a Not Found (404) response */ 
-                        _SendResponse(socket, new byte[0], null, ResponseType.NOT_FOUND);
-                    }
+                    /* otherwise generate a Not Found (404) response */ 
+                    _SendResponse(socket, new byte[0], null, ResponseType.NOT_FOUND);
                 }
-
             }
+
+            
             socket.Close(); // always make sure to close network and file handles!!
         }
 
