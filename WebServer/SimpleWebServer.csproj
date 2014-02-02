@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CscriptProcessor.cs" />
+    <Compile Include="CWebTemplateProcessor.cs" />
     <Compile Include="IScriptProcessor.cs" />
     <Compile Include="ScriptResult.cs" />
     <Compile Include="WebServer.cs" />
