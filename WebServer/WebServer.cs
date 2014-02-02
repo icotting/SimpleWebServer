@@ -31,6 +31,7 @@ namespace WebServer
         private readonly string _webRoot;
         private readonly string _defaultDoc;
         private IScriptProcessor _scriptProcessor;
+        private IScriptProcessor _cwebProcessor;
 
         static void Main(string[] args)
         {
@@ -58,8 +59,9 @@ namespace WebServer
              * csscript */
             _scriptProcessor = new CscriptProcessor();
 
-            /*TODO: add another instance of a IScriptProcessor to handle files of
-             * type csweb */
+            /* this script processor instance will be used to process files of type 
+             * csscript */
+            _cwebProcessor = new CWebTemplateProcessor();
 
             /* set the root for the server */
             _webRoot = root;
@@ -198,7 +200,7 @@ namespace WebServer
                     type = "text/html; charset=utf8";
                     break;
 
-                /* this is a special case as the requested file needs to be executed and the 
+                /* These are special cases as the requested file needs to be executed and the 
                  * result of the execution returned as the response body rather than the 
                  * file itself */
                 case ".csscript": 
@@ -207,9 +209,12 @@ namespace WebServer
                         return;
                     }
 
-                /* TODO: add another handler for processing web template files
-                 * case ".csweb": 
-                 */
+                case ".cweb":
+                    {
+                        _GenerateCWebResult(socket, path, requestParameters);
+                        return;
+                    }
+
                 default:
                     type = "application/octet-stream";
                     break;
@@ -287,8 +292,18 @@ namespace WebServer
          * body of the response */
         private void _GenerateScriptResult(Socket socket, string path, Dictionary<string, string> requestParameters)
         {
+            _GenerateDynamicResult(_scriptProcessor, socket, path, requestParameters);
+        }
+
+        private void _GenerateCWebResult(Socket socket, string path, Dictionary<string, string> requestParameters)
+        {
+            _GenerateDynamicResult(_cwebProcessor, socket, path, requestParameters);
+        }
+
+        private void _GenerateDynamicResult(IScriptProcessor processor, Socket socket, string path, Dictionary<string, string> requestParameters)
+        {
             /* get a script result from the scrupt processor using the request parameter dictionary */
-            ScriptResult result = _scriptProcessor.ProcessScript(path, requestParameters);
+            ScriptResult result = processor.ProcessScript(path, requestParameters);
 
             /* if the result was an error, send an HTTP Error (500) along wiht a summary of 
              * what went wrong as the body */
