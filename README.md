@@ -59,7 +59,7 @@ So called CWebTemplates are basic web templates that allow C# to be embedded dir
 			DateTime dt = DateTime.Now;
 		}
 		<h1>@{foo}</h1>
-		<p>The current time is @{dt.toString("MMM dd, yyyy hh:mm:ss")}</p>
+		<p>The current time is @{dt.ToString("MMM dd, yyyy hh:mm:ss")}</p>
 
 		<span>The value of the parameter user is</span> @{request["user"]}
 	</body>
