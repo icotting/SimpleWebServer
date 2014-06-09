@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,6 @@ namespace WebServer
      */
     interface IScriptProcessor
     {
-        ScriptResult ProcessScript(string path, IDictionary<string, string> requestParameters);
+        ScriptResult ProcessScript(Stream stream, IDictionary<string, string> requestParameters);
     }
 }

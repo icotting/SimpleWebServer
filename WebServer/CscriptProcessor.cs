@@ -48,21 +48,18 @@ namespace WebServer
             _parameters.CompilerOptions = "/t:library";
         }
 
-        public ScriptResult ProcessScript(string path, IDictionary<string, string> requestParameters)
+        public ScriptResult ProcessScript(Stream stream, IDictionary<string, string> requestParameters)
         {
             StringBuilder scriptBody = new StringBuilder();
          
-            /* read the contents of the file into a string 
+            /* read the contents of the stream into a string 
              * builder line by line to create a single 
              * string that represents the script */
-            using (FileStream fs = File.OpenRead(path))
+            StreamReader reader = new StreamReader(stream);
+            string line = null;
+            while ((line = reader.ReadLine()) != null)
             {
-                StreamReader reader = new StreamReader(fs);
-                string line = null;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    scriptBody.Append(line);
-                }
+                scriptBody.Append(line);
             }
 
             /* combine the script string with the class template in order to create something 

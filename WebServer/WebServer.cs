@@ -289,8 +289,11 @@ namespace WebServer
         private void _GenerateScriptResult(Socket socket, string path, Dictionary<string, string> requestParameters)
         {
             /* get a script result from the scrupt processor using the request parameter dictionary */
-            ScriptResult result = _scriptProcessor.ProcessScript(path, requestParameters);
-
+            ScriptResult result;
+            using (FileStream fs = File.OpenRead(path))
+            {
+                result = _scriptProcessor.ProcessScript(fs, requestParameters);
+            }
             /* if the result was an error, send an HTTP Error (500) along wiht a summary of 
              * what went wrong as the body */
             if (result.Error)
