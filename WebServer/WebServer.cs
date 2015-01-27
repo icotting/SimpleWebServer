@@ -202,7 +202,7 @@ namespace WebServer
                 /* this is a special case as the requested file needs to be executed and the 
                  * result of the execution returned as the response body rather than the 
                  * file itself */
-                case ".csscript": 
+                case ".cscript": 
                     {
                         _GenerateScriptResult(socket, path, requestParameters);
                         return;
