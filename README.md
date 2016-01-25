@@ -54,10 +54,10 @@ So called CWebTemplates are basic web templates that allow C# to be embedded dir
 ```
 <html>
 	<body>
-		{
+		{{
 			string foo = "My Great Template!!!";
 			DateTime dt = DateTime.Now;
-		}
+		}}
 		<h1>@{foo}</h1>
 		<p>The current time is @{dt.ToString("MMM dd, yyyy hh:mm:ss")}</p>
 
