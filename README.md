@@ -73,6 +73,6 @@ The master branch of the Simple Server does not contain an implementation of ISc
 
 1. Write a class named `CWebTemplateProcessor` that implements `IScriptProcessor`, this class should be capable of processing CWebTemplate files
 
-2. Update the WebServer class to serve CWebTemplates using the processor you developed in step 1
+2. Update the WebServer class to serve CWebTemplates using the processor you developed in step 1. The server should be able to serve these files denoted with the .cweb extension.
 
 3. Update the web server to support default documents in the top-level and sub-directories of the web root. If a user browses to the root of a directory, the default file should be served and, if no default file exists, a 404 should be sent back to the browser. 
