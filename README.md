@@ -71,9 +71,9 @@ The server will evaluate any C# code found between a set of double curly braces 
 ## Student Assignment
 The master branch of the Simple Server does not contain an implementation of IScriptProcessor that will process CWebTemplates. Your assignment is to implement such a class and extend the webserver to utilize that class such that it will be capable of serving CWebTemplates. You should complete the following tasks:
 
-1. Write a class named `CWebTemplateProcessor` that implements `IScriptProcessor`, this class should be capable of processing CWebTemplate files
-
-2. Update the WebServer class to serve CWebTemplates using the processor you developed in step 1. The server should be able to serve these files denoted with the .cweb extension. Your processor should be cabable of handling inline style and complicated block structures an example of which can be found here: 
+1. Update the web server to support default documents in the top-level and sub-directories of the web root. If a user browses to the root of a directory, the default file should be served and, if no default file exists, a 404 should be sent back to the browser. 
+2. Write a class named `CWebTemplateProcessor` that implements `IScriptProcessor`, this class should be capable of processing CWebTemplate files.
+3. Update the WebServer class to serve CWebTemplates using the processor you developed in step 1. The server should be able to serve these files denoted with the .cweb extension. Your processor should be cabable of handling inline style and complicated block structures an example of which can be found below: 
 
 ```
 <html>
@@ -113,5 +113,3 @@ The master branch of the Simple Server does not contain an implementation of ISc
     </body>
 </html>
 ```
-
-3. Update the web server to support default documents in the top-level and sub-directories of the web root. If a user browses to the root of a directory, the default file should be served and, if no default file exists, a 404 should be sent back to the browser. 
