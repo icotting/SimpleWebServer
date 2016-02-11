@@ -73,6 +73,45 @@ The master branch of the Simple Server does not contain an implementation of ISc
 
 1. Write a class named `CWebTemplateProcessor` that implements `IScriptProcessor`, this class should be capable of processing CWebTemplate files
 
-2. Update the WebServer class to serve CWebTemplates using the processor you developed in step 1. The server should be able to serve these files denoted with the .cweb extension.
+2. Update the WebServer class to serve CWebTemplates using the processor you developed in step 1. The server should be able to serve these files denoted with the .cweb extension. Your processor should be cabable of handling inline style and complicated block structures an example of which can be found here: 
+
+```
+<html>
+    <body>
+        {{
+            int i = !request.ContainsKey("i") ? 1 : Int32.Parse(request["i"]);
+            int j = !request.ContainsKey("j") ? 10 : Int32.Parse(request["j"]);
+        }}
+        <h1>More Complicated</h1>
+        <p>Let's try to count from @{i} to @{j}</p>
+
+        {{
+          if ( !request.ContainsKey("i") ) {
+        }}
+          <p style="color: red"><i>Oops, missing the i value, using @{i} as a default</i></p>
+        {{
+          }
+        }}
+
+        {{
+          if ( !request.ContainsKey("j") ) {
+        }}
+          <p style="color: red"><i>Oops, missing the j value, using @{j} as a default</i></p>
+        {{
+          }
+        }}
+
+        <ul>
+          {{
+            for ( var pos = i; pos < j; pos++ ) {
+          }}
+            <li>@{pos}</li>
+          {{
+            }
+          }}
+        </ul>
+    </body>
+</html>
+```
 
 3. Update the web server to support default documents in the top-level and sub-directories of the web root. If a user browses to the root of a directory, the default file should be served and, if no default file exists, a 404 should be sent back to the browser. 
